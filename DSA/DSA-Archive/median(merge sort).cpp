@@ -1,56 +1,98 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-
-void mergeArrays(vector<int> &a, vector<int> &b, vector<int> &merged)
+void merge(vector<int> &arr, int low, int high, int mid)
 {
-    int i = 0, j = 0;
-
-    while (i < a.size() && j < b.size())
+    int i=low;
+    int k=low;
+    int j=mid+1;
+    int temp[1000];
+    while(i<=mid&& j<=high)
     {
-        if (a[i] <= b[j])
-            merged.push_back(a[i++]);
+        if(arr[i]<arr[j])
+        {
+            temp[k]=arr[i];
+            i++;k++;
+        }
         else
-            merged.push_back(b[j++]);
+        {
+            temp[k]=arr[j];
+            j++;
+            k++;
+        }
     }
-
-    while (i < a.size())
-        merged.push_back(a[i++]);
-
-    while (j < b.size())
-        merged.push_back(b[j++]);
+    while(i<=mid)
+    {
+        temp[k]=arr[i];
+        i++;
+        k++;
+    }
+    while(j<=high)
+    {
+        temp[k]=arr[j];
+        j++;
+        k++;
+    }
+    for(int i=low; i<=high;i++)
+    {
+        arr[i]=temp[i];
+    }
 }
-
+void mergeSort(vector<int> &arr, int low, int high)
+{
+    if(low<high)
+    {
+        int mid=(low+high)/2;
+        mergeSort(arr,low,mid);
+        mergeSort(arr,mid+1, high);
+        merge(arr,low,high,mid);
+    }
+}
 int main()
 {
-    int n1, n2;
-    cin >> n1 >> n2;
-
-    vector<int> a(n1), b(n2), merged;
-
-    for (int i = 0; i < n1; i++)
-        cin >> a[i];
-
-    for (int i = 0; i < n2; i++)
-        cin >> b[i];
-
-    mergeArrays(a, b, merged);
-
-    cout << "Merged Array: ";
-    for (int x : merged)
-        cout << x << " ";
-    cout << endl;
-
-    int n = merged.size();
-
-    if (n % 2 == 1)
+    int n;
+    cin>>n;
+    vector<int> vec1;
+    vector<int> vec2;
+    for(int i=0; i<n; i++)
     {
-        cout << "Median = " << merged[n / 2];
+        int el;
+        cin>>el;
+        vec1.push_back(el);
+    }
+    int m;
+    cin>>m;
+     for(int i=0; i<m; i++)
+    {
+        int el;
+        cin>>el;
+        vec2.push_back(el);
+    }
+    vector<int> vec;
+    for(int i=0; i<n; i++)
+    {
+       vec.push_back(vec1[i]);
+
+    }
+    for(int i=0; i<m; i++)
+    {
+
+       vec.push_back(vec2[i]);
+    }
+    mergeSort(vec,0,(n+m)-1);
+    for(int i=0; i<n+m;i++)
+    {
+        cout<<vec[i]<<" ";
+    }
+    cout<<endl;
+    double median;
+    if((n+m)%2==0)
+    {
+        median = (vec[(n+m)/2 - 1] + vec[(n+m)/2]) / 2.0;
     }
     else
     {
-        double median = (merged[n / 2 - 1] + merged[n / 2]) / 2.0;
-        cout << "Median = " << median;
-    }
+        median=(vec[0+(n+m)/2]);
 
-    return 0;
+    }
+    cout<<median;
 }
